@@ -1,0 +1,8 @@
+[package]
+name = "kscope"
+version = "0.1.0"
+authors = ["Robert Lord <robert@lord.io>"]
+
+[dependencies]
+llvm-alt = "*"
+llvm-sys = "0.3"
