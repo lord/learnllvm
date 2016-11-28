@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "llvm-alt 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "llvm-sys 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nom 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -62,6 +63,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "nom"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "semver"
 version = "0.1.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -74,4 +80,5 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum llvm-alt 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "42a44d2dd367ee3f9f7c73cfa8c2d6ce6a980b9c7ba044590ceccd1e44f5e695"
 "checksum llvm-sys 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "207a87842192d9aea5dee4f38e3a1b3b9bafd3a5fa1497693d924bf3ecfe80b0"
 "checksum llvm-sys 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "53757e4a2a442608cd0c9d50b555695e299a459a94dc25970d60dc5bc5674449"
+"checksum nom 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "628d6ee18ab0ca1c1feb3331caa6ad2e53f6053b2505662b90d194889bbcd571"
 "checksum semver 0.1.20 (registry+https://github.com/rust-lang/crates.io-index)" = "d4f410fedcf71af0345d7607d246e7ad15faaadd49d240ee3b24e5dc21a820ac"
