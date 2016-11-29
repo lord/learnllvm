@@ -116,14 +116,14 @@ fn identifier_expr<'a>(id: &str, rem: &'a [Token]) -> ParseResult<'a> {
   };
 
   let mut args = Vec::new();
-  while let Some(next) = rest.first() {
+  while let Some((next, leftover)) = rest.split_first() {
     // next symbol is ), so this is the end, return
     if next == &Token::Symbol(')') {
       let call = Expr::FuncCall{
         func: id.to_string(),
         args: args,
       };
-      return Ok((call, rest));
+      return Ok((call, leftover));
     }
 
     let (expr, rest_from_parse) = try!(parse_single_expr(rest));
