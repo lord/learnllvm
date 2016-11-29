@@ -12,9 +12,9 @@ use std::io::stdout;
 fn main() {
   loop {
     print!("ks> ");
-    stdout().flush();
+    let _ = stdout().flush();
     let mut input = String::new();
-    io::stdin().read_line(&mut input);
+    let _ = io::stdin().read_line(&mut input);
     if let Some(tokens) = lexer::lex(&input) {
       let ast = parser::parse(&tokens);
       println!("lex: {:?}", &tokens);
