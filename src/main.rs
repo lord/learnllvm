@@ -7,6 +7,7 @@ enum Token {
   Def,
   Extern,
   Identifier(String),
+  Symbol(char),
   Number(f64)
 }
 
@@ -26,8 +27,9 @@ named!(comment<&str, &str>, preceded!(
 named!(white_space<&str, &str>, alt!(comment | tag_s!(" ") | tag_s!("\t") | tag_s!("\n")));
 
 named!(token<&str, Token>, chain!(
-  tok: take_while_s!(token_char) ,
+  tok: alt!(take_while1_s!(token_char) | take_s!(1)) ,
   || {
+    println!("{:?}", tok);
     if tok == "def" {
       Token::Def
     } else if tok == "extern" {
@@ -47,5 +49,5 @@ named!(lex< &str, Vec<Token> >, many0!(delimited!(
 )));
 
 fn main() {
-    println!("{:?}", lex(&"hello    \ntesting #!(*@)#(*) def \nextern  129382 1.198 198.2e2 #blah"));
+    println!("{:?}", lex(&"hello    \ntest+ing #!(*@)#(*) def \nextern  129382 1.198 198.2e2 #blah"));
 }
