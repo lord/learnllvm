@@ -4,7 +4,6 @@ extern crate nom;
 
 #[derive(Debug)]
 enum Token {
-  Eof,
   Def,
   Extern,
   Identifier(String),
