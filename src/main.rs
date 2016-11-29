@@ -19,10 +19,9 @@ fn comment_char(chr: char) -> bool {
   chr != '\n'
 }
 
-named!(comment<&str, &str>, delimited!(
+named!(comment<&str, &str>, preceded!(
   tag_s!("#"),
-  take_while_s!(comment_char),
-  tag_s!("\n")
+  take_while_s!(comment_char)
 ));
 
 named!(white_space<&str, &str>, alt!(comment | tag_s!(" ") | tag_s!("\t") | tag_s!("\n")));
@@ -49,5 +48,5 @@ named!(lex< &str, Vec<Token> >, many0!(delimited!(
 )));
 
 fn main() {
-    println!("{:?}", lex(&"hello    \ntesting #!(*@)#(*) def \nextern  129382 1.198 198.2e2 blah"));
+    println!("{:?}", lex(&"hello    \ntesting #!(*@)#(*) def \nextern  129382 1.198 198.2e2 #blah"));
 }
