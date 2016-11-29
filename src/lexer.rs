@@ -25,7 +25,6 @@ named!(white_space<&str, &str>, alt!(comment | tag_s!(" ") | tag_s!("\t") | tag_
 named!(token<&str, Token>, chain!(
   tok: alt!(take_while1_s!(token_char) | take_s!(1)) ,
   || {
-    println!("{:?}", tok);
     if tok == "def" {
       Token::Def
     } else if tok == "extern" {
@@ -52,5 +51,5 @@ named!(lex_internal< &str, Vec<Token> >, many0!(delimited!(
 // TODO pass errors down properly instead of using an option
 pub fn lex(code: &str) -> Option<Vec<Token>> {
   // TODO this may sometimes skip lexing invalid stuff at end but still say it's okay, which is bad
-  lex_internal(code).to_result().ok()
+  lex_internal(code).to_full_result().ok()
 }

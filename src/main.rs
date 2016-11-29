@@ -5,12 +5,22 @@ extern crate nom;
 mod lexer;
 mod parser;
 
+use std::io;
+use std::io::Write;
+use std::io::stdout;
+
 fn main() {
-    if let Some(tokens) = lexer::lex(&"unetohan + ath") {
+  loop {
+    print!("ks> ");
+    stdout().flush();
+    let mut input = String::new();
+    io::stdin().read_line(&mut input);
+    if let Some(tokens) = lexer::lex(&input) {
       let ast = parser::parse(&tokens);
       println!("lex: {:?}", &tokens);
       println!("parse: {:?}", &ast);
     } else {
       println!("failed to lex!")
     }
+  }
 }

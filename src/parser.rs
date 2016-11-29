@@ -130,7 +130,7 @@ fn identifier_expr<'a>(id: &str, rem: &'a [Token]) -> ParseResult<'a> {
     rest = rest_from_parse;
     args.push(expr);
   }
-  // reached end of token stream without hitting ). TODO ADD ERROR
+  // reached end of token stream without hitting ).
   make_error("Mismatched (, reached end of stream without )")
 }
 
