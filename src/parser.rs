@@ -37,10 +37,10 @@ pub struct Function {
 }
 
 fn primary_expr(rem: &[Token]) -> ParseResult {
-  if rem.len() == 0 {
-    return make_error("tried to parse primary expression but no tokens found");
-  }
-  let (cur, rest) = rem.split_first().unwrap();
+  let (cur, rest) = match rem.split_first() {
+    Some(result) => result,
+    None => return make_error("tried to parse primary expression but no tokens found"),
+  };
   let exp = match cur {
     &Token::Def => {
       unimplemented!()
