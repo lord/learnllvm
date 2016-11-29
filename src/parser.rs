@@ -96,7 +96,12 @@ fn identifier_expr<'a>(id: &str, rem: &'a [Token]) -> ParseResult<'a> {
 }
 
 fn paren_expr(rem: &[Token]) -> ParseResult {
-  unimplemented!()
+  let (expr, rest) = try!(parse_single_expr(rem));
+  match rest.split_first() {
+    Some((&Token::Symbol(')'), rest)) => Ok((expr, rest)),
+    Some(_) => make_error("Expected ), got another token instead"),
+    None => make_error("Expected ), but reached end of file instead"),
+  }
 }
 
 pub fn parse(tokens: &[Token]) -> Result<Expr, ParseError> {
