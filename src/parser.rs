@@ -1,6 +1,5 @@
 use lexer::Token;
 
-
 #[derive(Debug)]
 pub enum Expr {
   Number(f64),
@@ -61,8 +60,48 @@ fn primary_expr(rem: &[Token]) -> ParseResult {
   Ok((exp, rest))
 }
 
-fn parse_single_expr<'a>(rem: &'a [Token]) -> ParseResult<'a> {
-  unimplemented!()
+fn parse_single_expr(rem: &[Token]) -> ParseResult {
+  let (lhs, rest) = try!(primary_expr(rem));
+  parse_binop_rhs(0, lhs, rest)
+}
+
+fn get_token_precedence(tok: &Token) -> i64 {
+  match tok {
+    &Token::Symbol('*') => 40,
+    &Token::Symbol('-') => 20,
+    &Token::Symbol('+') => 20,
+    &Token::Symbol('<') => 10,
+    _ => -1,
+  }
+}
+
+fn parse_binop_rhs(expr_prec: i64, lhs: Expr, rem: &[Token]) -> ParseResult {
+  let (op, rest) = match rem.split_first() {
+    None => return Ok((lhs, rem)),
+    Some(result) => result,
+  };
+  let op_char = match op {
+    &Token::Symbol(sym) => sym,
+    _ => 'x',
+  };
+  if get_token_precedence(op) < expr_prec {
+    return Ok((lhs, rem));
+  }
+  let (mut rhs, mut rest) = try!(primary_expr(rest));
+
+  if let Some((next_op, _)) = rest.split_first() {
+    if get_token_precedence(op) < get_token_precedence(next_op) {
+      let (new_rhs, new_rest) = try!(parse_binop_rhs(get_token_precedence(op) + 1, rhs, rest));
+      rhs = new_rhs;
+      rest = new_rest;
+    }
+  }
+  let binop = Expr::BinaryOp{
+    op: op_char,
+    lhs: Box::new(lhs),
+    rhs: Box::new(rhs),
+  };
+  Ok((binop, rest))
 }
 
 fn identifier_expr<'a>(id: &str, rem: &'a [Token]) -> ParseResult<'a> {
@@ -105,11 +144,11 @@ fn paren_expr(rem: &[Token]) -> ParseResult {
 }
 
 pub fn parse(tokens: &[Token]) -> Result<Expr, ParseError> {
-  primary_expr(tokens).and_then(|(exp, remaining)| {
+  parse_single_expr(tokens).and_then(|(exp, remaining)| {
     if remaining.len() == 0 {
       Ok(exp)
     } else {
-      Err(ParseError("didn't reach end of stream".to_string()))
+      Err(ParseError(format!("didn't reach end of stream, {:?} remains.", remaining)))
     }
   })
 }

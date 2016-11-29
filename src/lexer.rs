@@ -1,6 +1,3 @@
-use nom::{InputIter, IResult};
-use std::iter::Enumerate;
-
 #[derive(Debug, PartialEq)]
 pub enum Token {
   Def,

@@ -6,7 +6,7 @@ mod lexer;
 mod parser;
 
 fn main() {
-    if let Some(tokens) = lexer::lex(&"unetohan") {
+    if let Some(tokens) = lexer::lex(&"unetohan + ath") {
       let ast = parser::parse(&tokens);
       println!("lex: {:?}", &tokens);
       println!("parse: {:?}", &ast);
