@@ -6,5 +6,11 @@ mod lexer;
 mod parser;
 
 fn main() {
-    println!("{:?}", lexer::lex(&"hello    \ntest+ing #!(*@)#(*) def \nextern  129382 1.198 198.2e2 #blah"));
+    if let Some(tokens) = lexer::lex(&"1239018") {
+      let ast = parser::parse(&tokens);
+      println!("lex: {:?}", &tokens);
+      println!("parse: {:?}", &ast);
+    } else {
+      println!("failed to lex!")
+    }
 }

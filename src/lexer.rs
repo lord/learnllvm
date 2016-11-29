@@ -1,3 +1,6 @@
+use nom::{InputIter, IResult};
+use std::iter::Enumerate;
+
 #[derive(Debug)]
 pub enum Token {
   Def,
@@ -43,8 +46,14 @@ named!(token<&str, Token>, chain!(
   }
 ));
 
-named!(pub lex< &str, Vec<Token> >, many0!(delimited!(
+named!(lex_internal< &str, Vec<Token> >, many0!(delimited!(
   many0!(white_space),
   token,
   many0!(white_space)
 )));
+
+// TODO pass errors down properly instead of using an option
+pub fn lex(code: &str) -> Option<Vec<Token>> {
+  // TODO this may sometimes skip lexing invalid stuff at end but still say it's okay, which is bad
+  lex_internal(code).to_result().ok()
+}
