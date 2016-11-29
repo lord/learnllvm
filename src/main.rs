@@ -37,7 +37,12 @@ named!(token<&str, Token>, chain!(
     } else if let Ok(n) = tok.parse::<f64>() {
       Token::Number(n)
     } else {
-      Token::Identifier(tok.to_string())
+      let first_char = tok.chars().next().unwrap();
+      if token_char(first_char) {
+        Token::Identifier(tok.to_string())
+      } else {
+        Token::Symbol(first_char)
+      }
     }
   }
 ));
