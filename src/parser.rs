@@ -41,14 +41,29 @@ fn primary_expr(rem: &[Token]) -> Option<(Expr, &[Token])> {
       unimplemented!()
     },
     &Token::Identifier(ref id) => {
-      unimplemented!()
+      return identifier_expr(id, rest)
     },
-    &Token::Symbol(ref chr) => {
-      unimplemented!()
+    &Token::Symbol(ref chr) => match chr {
+      &'(' => return paren_expr(rest),
+      _ => unimplemented!(),
     },
     &Token::Number(n) => Expr::Number(n),
   };
   Some((exp, rest))
+}
+
+fn identifier_expr<'a>(id: &str, rem: &'a [Token]) -> Option<(Expr, &'a [Token])> {
+  // peek at next value
+  match rem.first() {
+    Some(&Token::Symbol('(')) => {
+      unimplemented!()
+    }
+    _ => Some((Expr::Variable(id.to_string()), rem)),
+  }
+}
+
+fn paren_expr(rem: &[Token]) -> Option<(Expr, &[Token])> {
+  unimplemented!()
 }
 
 pub fn parse(tokens: &[Token]) -> Option<Expr> {
