@@ -4,6 +4,7 @@ extern crate nom;
 
 mod lexer;
 mod parser;
+mod codegen;
 
 use std::io;
 use std::io::Write;
