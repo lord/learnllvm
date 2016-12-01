@@ -108,7 +108,7 @@ fn parse_binop_rhs(expr_prec: i64, lhs: Expr, rem: &[Token]) -> ParseResult<Expr
     lhs: Box::new(lhs),
     rhs: Box::new(rhs),
   };
-  Ok((binop, rest))
+  parse_binop_rhs(expr_prec, binop, rest)
 }
 
 fn identifier_expr<'a>(id: &str, rem: &'a [Token]) -> ParseResult<'a, Expr> {
