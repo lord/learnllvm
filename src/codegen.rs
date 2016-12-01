@@ -18,11 +18,11 @@ pub fn codegen_proto<'a>(ctx: &'a Context,
   proto_ast: &parser::Prototype) -> &'a Function {
   let typ = Type::get::<f64>(ctx);
   let func_type = FunctionType::new(typ, &vec![typ; proto_ast.args.len()]);
-  module.add_function(&proto_ast.name, func_type)
-  // TODO Set names for all arguments.
-  // unsigned Idx = 0;
-  // for (auto &Arg : F->args())
-  //   Arg.setName(Args[Idx++]);
+  let func = module.add_function(&proto_ast.name, func_type);
+  for i in 0..proto_ast.args.len() {
+    func[i].set_name(&proto_ast.args[i])
+  }
+  func
 }
 
 pub fn codegen_func<'a>(ctx: &'a Context,
