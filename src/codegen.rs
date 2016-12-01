@@ -1,5 +1,5 @@
 use parser::Expr;
-use llvm::{Context, Value, Compile, Builder};
+use llvm::{Context, Value, Compile, Builder, Module};
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -13,6 +13,7 @@ fn make_error(desc: &str) -> CompilerResult {
 
 pub fn codegen<'a>(ctx: &'a Context,
   builder: &'a Builder,
+  module: &mut Module,
   vals: &mut HashMap<String, &'a Value>,
   expr: Expr) -> CompilerResult<'a> {
   match expr {
@@ -22,8 +23,8 @@ pub fn codegen<'a>(ctx: &'a Context,
       None => make_error("couldn't find variable"),
     },
     Expr::BinaryOp{op, lhs, rhs} => {
-      let lhs_code = try!(codegen(ctx, builder, vals, *lhs));
-      let rhs_code = try!(codegen(ctx, builder, vals, *rhs));
+      let lhs_code = try!(codegen(ctx, builder, module, vals, *lhs));
+      let rhs_code = try!(codegen(ctx, builder, module, vals, *rhs));
 
       match op {
         '+' => Ok(builder.build_add(lhs_code, rhs_code)),
@@ -35,4 +36,5 @@ pub fn codegen<'a>(ctx: &'a Context,
     },
     Expr::FuncCall{func, args} => unimplemented!(),
   }
+
 }
