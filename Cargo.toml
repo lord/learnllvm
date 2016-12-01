@@ -5,5 +5,5 @@ authors = ["Robert Lord <robert@lord.io>"]
 
 [dependencies]
 llvm-alt = "*"
-llvm-sys = "0.3"
+llvm-sys = "0.4"
 nom = "*"

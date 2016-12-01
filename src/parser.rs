@@ -33,14 +33,14 @@ pub enum AST {
 
 #[derive(Debug)]
 pub struct Prototype {
-  name: String,
-  args: Vec<String>,
+  pub name: String,
+  pub args: Vec<String>,
 }
 
 #[derive(Debug)]
 pub struct Function {
-  proto: Prototype,
-  body: Expr,
+  pub proto: Prototype,
+  pub body: Expr,
 }
 
 fn primary_expr(rem: &[Token]) -> ParseResult<Expr> {

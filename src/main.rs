@@ -21,8 +21,8 @@ fn main() {
   let ctx = Context::new();
   let ctx = ctx.as_semi();
   let builder = Builder::new(&ctx);
-  let mut vars = HashMap::new();
   let mut module = Module::new("mod_name", &ctx);
+  let mut vars = HashMap::new();
   loop {
     print!("ks> ");
     let _ = stdout().flush();
@@ -32,21 +32,34 @@ fn main() {
       let ast = parser::parse(&tokens);
       println!("lex: {:?}", &tokens);
       println!("parse: {:?}", &ast);
-      if let Ok(parser::AST::Expr(expr)) = ast {
-        let val = codegen::codegen(&ctx, &builder, &mut module, &mut vars, expr);
-        println!("codegen: {:?}", &val);
-        if let Ok(value) = val {
+      match ast {
+        Ok(parser::AST::Expr(e)) => {
+          let val = codegen::codegen(&ctx, &builder, &module, &mut vars, e);
+          println!("codegen value: {:?}", &val);
           // unsafe {
-          //   let vref: LLVMValueRef = mem::transmute(value);
+          //   let vref: LLVMValueRef = mem::transmute(value.unwrap());
           //   println!("foo")
           //   LLVMDumpValue(vref);
           // }
-        } else {
-          println!("failed, so not dumping");
         }
-      } else {
-        println!("Didn't codegen");
-      }
+        Ok(parser::AST::Prototype(p)) => {
+          codegen::codegen_proto(&ctx, &builder, &module, &mut vars, &p);
+        },
+        Ok(parser::AST::Function(f)) => {
+          let val = codegen::codegen_func(&ctx, &builder, &module, &mut vars, f);
+          if let Err(msg) = val {
+            println!("codegen error: {:?}", &msg);
+          }
+          println!("module so far:");
+          unsafe {
+              let mref: llvm_sys::prelude::LLVMModuleRef = module.as_ptr();
+              llvm_sys::core::LLVMDumpModule(mref);
+          }
+        }
+        _ => {
+          println!("Failed to parse!");
+        }
+      };
     } else {
       println!("failed to lex!")
     }
