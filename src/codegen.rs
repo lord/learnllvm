@@ -70,7 +70,29 @@ pub fn codegen<'a>(ctx: &'a Context,
         // '<' => builder.build_cmp(lhs_code, rhs_code),
       }
     },
-    parser::Expr::FuncCall{func, args} => unimplemented!(),
+    parser::Expr::FuncCall{func: func_name, args: arg_names} => {
+      let func = match module.get_function(&func_name) {
+        Some(func) => func,
+        None => return make_error("couldn't find that function"),
+      };
+      if (func.get_signature().num_params() != arg_names.len()) {
+        return make_error("incorrect number of args passed");
+      }
+
+      let mut arg_vals = Vec::new();
+      for arg in arg_names {
+        arg_vals.push(try!(codegen(ctx, builder, module, vals, arg)));
+      }
+      Ok(builder.build_call(func, &arg_vals))
+      // std::vector<Value *> ArgsV;
+      // for (unsigned i = 0, e = Args.size(); i != e; ++i) {
+      //   ArgsV.push_back(Args[i]->codegen());
+      //   if (!ArgsV.back())
+      //     return nullptr;
+      // }
+
+      // return Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+    },
   }
 
 }
